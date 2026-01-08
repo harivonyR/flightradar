@@ -1,2 +1,2 @@
 # flightradar
-Simple Scraper to learn fondamental.
+Simple Scraper to learn fundamental.
