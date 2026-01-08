@@ -12,6 +12,7 @@ import gzip
 import brotli
 import json
 
+
 _DECODERS = {
     "": lambda x: x,
     "gzip": gzip.decompress,
@@ -21,7 +22,7 @@ _DECODERS = {
 
 def decode_response(response: requests.Response) -> Dict[str, Any]:
     """
-        Take a raw response in input and return the JSON data
+        Take a raw response as input and return the JSON data
         
     """
     response.raise_for_status()
