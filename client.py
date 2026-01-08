@@ -57,3 +57,15 @@ def fetch_feed(bounds: str) -> Dict[str, Any]:
 
     response = requests.get(url, headers=HEADERS, timeout=30)
     return decode_response(response)
+
+def fetch_flight_details(flightID: str ) -> Dict[Any, Any]:
+    """
+        Trigger clickhandler and return Flight details
+    
+    """
+
+    flight_data_url = "https://data-live.flightradar24.com/clickhandler/?flight={}"
+    
+    response = requests.get(flight_data_url.format(flightID), headers=HEADERS, timeout=30)
+    
+    return decode_response(response)
