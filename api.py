@@ -1,64 +1,81 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan  8 19:42:35 2026
-
-@author: Lenovo
+API layer – FlightRadar endpoints
 """
-from client import fetch_feed, fetch_flight_details
-from typing import Dict, Any,List
+
+from typing import Dict, Any, List
+
+from client import fetch_feed, fetch_flight_details, fetch_airlines
 from mapping import map_flight
 
-def get_flights(lat_max: float, lat_min: float, lon_min: float, lon_max: float) -> List[Dict[str, Any]]:
+
+def get_flights(
+    lat_max: float,
+    lat_min: float,
+    lon_min: float,
+    lon_max: float
+) -> List[Dict[str, Any]]:
     """
-        Return List of Flight found inside bounds (latitude & longitude)
-    
+    Return list of flights inside bounds (latitude & longitude)
     """
-    
+
     bounds = f"{lat_max},{lat_min},{lon_min},{lon_max}"
 
-    raw_feed = fetch_feed(bounds)
+    try:
+        raw_feed = fetch_feed(bounds)
+    except Exception as exc:
+        return {
+            "error": True,
+            "endpoint": "get_flights",
+            "message": "Unable to fetch live feed",
+            "details": str(exc),
+        }
 
-    flights = []
+    flights: List[Dict[str, Any]] = []
 
     for flight_id, feed in raw_feed.items():
         if not flight_id or not flight_id[0].isdigit():
             continue
 
-        flight = map_flight(feed)
-        flight["id"] = flight_id
-        flights.append(flight)
+        try:
+            flight = map_flight(feed)
+            flight["id"] = flight_id
+            flights.append(flight)
+        except Exception:
+            # Skip corrupted flight entry (defensive scraping)
+            continue
 
     return flights
 
 
-def get_flight_details(flightID: str ) -> Dict[Any, Any]:
+def get_flight_details(flight_id: str) -> Dict[str, Any]:
     """
-        Take a flightid, call a click handler and return flight details
-    
+    Take a flight_id, call click handler and return flight details
     """
-    
-    flight_details = fetch_flight_details(flightID)
-    """
-    aircraft = self.__get_info(details.get("aircraft"), dict())
-    airline = self.__get_info(details.get("airline"), dict())
-    airport = self.__get_info(details.get("airport"), dict())
-    history = self.__get_info(details.get("flightHistory"), dict())
-    status = self.__get_info(details.get("status"), dict())
-    
-    trail = details.get("trail", list())
-    time_details =  details.get("time", {})
-    
-    flight_details = {
-        "aircraft" : aircraft,
-        "airline" : airline,
-        "airport" : airport,
-        
-        "history" : history,
-        "status" : status,
-        
-        "trail" : trail,
-        "time_details" :  time_details
+
+    try:
+        return fetch_flight_details(flight_id)
+    except Exception as exc:
+        return {
+            "error": True,
+            "endpoint": "get_flight_details",
+            "flight_id": flight_id,
+            "message": "Unable to fetch flight details",
+            "details": str(exc),
         }
+
+
+def get_airlines() -> Dict[str, Any]:
     """
-    
-    return flight_details
+    Return airlines list
+    """
+
+    try:
+        return fetch_airlines()
+    except Exception as exc:
+        return {
+            "error": True,
+            "endpoint": "get_airlines",
+            "message": "Unable to fetch airlines list",
+            "details": str(exc),
+        }
