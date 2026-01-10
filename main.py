@@ -26,13 +26,13 @@ if __name__ == "__main__" :
     
     flightID = "3dd65321"    # A333-KE-KAL Registration : HL8025
     flight_detail = get_flight_details(flightID)
-    
     #print(f"Flights found: {flight_detail}")
+    
     
     """    3. Get List Of All Airlines Available   """
     
     airlines = get_airlines()
-    
+    print(f"Airlines found: {len(airlines)}")
     
     
     
