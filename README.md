@@ -2,13 +2,12 @@
 Simple Scraper to learn fundamental.
 
 
-## Get Started
 ### Setup Dependencies :
 ```bash
 pip install requests beautifulsoup4 brotli
 ```
 
-## Project Structure
+### Project Structure
 ```
 .
 ├── main.py     # Entry point / usage examples
@@ -18,8 +17,8 @@ pip install requests beautifulsoup4 brotli
 └── README.md
 ```
 
-## Endpoint
-### 1. get_flight : 
+### Endpoint
+#### 1. get_flight 
 Scrape flights within a geographic area (latitude & longitude)
 
 ```python
@@ -37,7 +36,7 @@ print(f"Flights found: {len(flights)}")
 
 ```
 
-### 2. get_flight_details :
+#### 2. get_flight_details
 Retrieve flight details using a flight ID.
 
 ```python
@@ -47,7 +46,7 @@ flight_id = "3dd65321"
 flight_detail = get_flight_details(flight_id)
 ```
 
-### 3. get_airlines :
+#### 3. get_airlines
 Retrieve the list of airlines.
 ```python
 from api import get_airlines
